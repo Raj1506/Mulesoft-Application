@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3120cb28-d268-4ffc-99c1-3ed7eb784f41" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="810b20ed-5ec1-4d05-9a4c-96c574011bbc" >
+		<file:connection workingDir="E:\input" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="70ba03d9-1dee-452c-949b-58e5bcc7d4fe" >
+		<file:connection workingDir="E:\Output" />
+	</file:config>
+	<flow name="filetofileFlow" doc:id="66f58eef-7186-46a3-85c4-918f3e71b9f0" >
+		<http:listener doc:name="Listener" doc:id="29e02a5a-c817-4e0e-b0fa-15c064598b9e" config-ref="HTTP_Listener_config" path="/file"/>
+		<file:list doc:name="List" doc:id="41c44477-96f1-465e-83a9-551d3ce564f8" directoryPath="E:\input" config-ref="File_Config"/>
+		<foreach doc:name="For Each" doc:id="3c313c58-730e-4c3b-a230-fec03c827c2a" >
+			<logger level="INFO" doc:name="Logger" doc:id="a10de3f4-c997-4c89-b992-16a9164b64e7" message="#[payload]" />
+			<file:write doc:name="Write" doc:id="c69fc4b2-79f9-4356-97ac-0133108c9280" config-ref="File_Config1" path="#[attributes.fileName]" />
+		</foreach>
+	</flow>
+</mule>
